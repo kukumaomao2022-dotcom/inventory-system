@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多店铺库存管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .card h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd6;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: 600;
+        }
+        
+        .stat-card .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .modal-header h3 {
+            font-size: 18px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 16px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .text-success { color: #28a745; }
+        .text-danger { color: #dc3545; }
+        .text-warning { color: #ffc107; }
+        .text-info { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 多店铺库存管理系统</h1>
+        <div class="subtitle">基于事件溯源架构 | 乐天API集成</div>
+    </div>
+    
+    <div class="container">
+        <div class="nav">
+            <button class="nav-btn active" data-page="dashboard">📊 控制台</button>
+            <button class="nav-btn" data-page="stores">🏪 店铺管理</button>
+            <button class="nav-btn" data-page="skus">📦 SKU管理</button>
+            <button class="nav-btn" data-page="inventory">📈 库存中心</button>
+            <button class="nav-btn" data-page="import">📤 CSV导入</button>
+            <button class="nav-btn" data-page="audit">📋 操作日志</button>
+        </div>
+        
+        <!-- 控制台 -->
+        <div id="page-dashboard" class="page">
+            <div class="grid">
+                <div class="stat-card">
+                    <div class="number" id="stat-stores">-</div>
+                    <div class="label">活跃店铺</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="number" id="stat-skus">-</div>
+                    <div class="label">SKU总数</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="number" id="stat-events">-</div>
+                    <div class="label">库存事件</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <div class="number" id="stat-oversell">-</div>
+                    <div class="label">超卖商品</div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 20px;">
+                <h2>🔔 最近库存事件</h2>
+                <div id="recent-events"></div>
+            </div>
+        </div>
+        
+        <!-- 店铺管理 -->
+        <div id="page-stores" class="page" style="display: none;">
+            <div class="card">
+                <h2>🏪 店铺列表</h2>
+                <div style="margin-bottom: 16px;">
+                    <button class="btn btn-primary" onclick="showAddStoreModal()">+ 添加店铺</button>
+                </div>
+                <div id="stores-list"></div>
+            </div>
+        </div>
+        
+        <!-- SKU管理 -->
+        <div id="page-skus" class="page" style="display: none;">
+            <div class="card">
+                <h2>📦 SKU列表</h2>
+                <div style="margin-bottom: 16px; display: flex; gap: 10px;">
+                    <input type="text" id="sku-search" placeholder="搜索SKU..." style="flex: 1;">
+                    <select id="sku-environment" style="width: 150px;">
+                        <option value="">全部环境</option>
+                        <option value="prod">生产环境</option>
+                        <option value="test">测试环境</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="loadSkus()">搜索</button>
+                    <button class="btn btn-success" onclick="showAddSkuModal()">+ 添加SKU</button>
+                </div>
+                <div id="skus-list"></div>
+            </div>
+        </div>
+        
+        <!-- 库存中心 -->
+        <div id="page-inventory" class="page" style="display: none;">
+            <div class="card">
+                <h2>📈 库存中心</h2>
+                <div style="margin-bottom: 16px;">
+                    <input type="text" id="inventory-search" placeholder="输入SKU搜索..." style="flex: 1; max-width: 300px;">
+                    <button class="btn btn-primary" onclick="searchInventory()">搜索</button>
+                </div>
+                <div id="inventory-detail"></div>
+            </div>
+        </div>
+        
+        <!-- CSV导入 -->
+        <div id="page-import" class="page" style="display: none;">
+            <div class="card">
+                <h2>📤 CSV导入</h2>
+                <div class="form-group">
+                    <label>选择店铺（可选，用于关联SKU）</label>
+                    <select id="import-store">
+                        <option value="">不关联店铺</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>导入模式</label>
+                    <select id="import-mode" onchange="toggleInventoryModeGroup()">
+                        <option value="metadata_only">仅更新元数据</option>
+                        <option value="reset_stock">重置库存数量</option>
+                    </select>
+                </div>
+                <div class="form-group" id="inventory-mode-group" style="display: none;">
+                    <label>库存导入模式</label>
+                    <select id="inventory-mode">
+                        <option value="replace">替换库存（确认为最终库存）</option>
+                        <option value="add">累加库存（相加）</option>
+                        <option value="skip_zero">跳过零库存（数量为0且库存为0或负数时跳过）</option>
+                    </select>
+                    <small style="color: #999; margin-left: 0; display: block; margin-top: 4px;">默认不导入库存，选择模式后才会导入</small>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="import-skip-no-sku" checked style="width: auto; margin-right: 8px;">
+                        <span>跳过没有 SKU 的行（商品级数据）</span>
+                    </label>
+                    <small style="color: #999; margin-left: 24px;">乐天 CSV 第一行是商品级数据，没有 SKU 管理番号</small>
+                </div>
+                <div class="form-group">
+                    <label>选择CSV文件</label>
+                    <input type="file" id="import-file" accept=".csv,.txt">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="previewImport()">预览</button>
+                    <button class="btn btn-success" onclick="confirmImport()">确认导入</button>
+                </div>
+                <div id="import-result"></div>
+            </div>
+
+            <!-- 测试工具 -->
+            <div class="card" style="border: 2px solid #ffc107;">
+                <h2>🧪 测试工具</h2>
+                <p style="color: #856404; margin-bottom: 16px;">重置所有测试数据，恢复初始状态（用于反复测试）</p>
+                <button class="btn btn-warning" onclick="resetTestData()">重置测试数据</button>
+                <div id="reset-result" style="margin-top: 16px;"></div>
+            </div>
+        </div>
+        
+        <!-- 操作日志 -->
+        <div id="page-audit" class="page" style="display: none;">
+            <div class="card">
+                <h2>📋 操作日志</h2>
+                <div id="audit-log"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加店铺弹窗 -->
+    <div class="modal" id="store-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加店铺</h3>
+                <button class="modal-close" onclick="closeModal('store-modal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>店铺ID</label>
+                <input type="text" id="store-id" placeholder="如: coucou-doma">
+            </div>
+            <div class="form-group">
+                <label>店铺名称</label>
+                <input type="text" id="store-name" placeholder="如: coucou-doma">
+            </div>
+            <div class="form-group">
+                <label>平台类型</label>
+                <select id="store-platform">
+                    <option value="rakuten">乐天</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Service Secret</label>
+                <input type="text" id="store-secret" placeholder="乐天Service Secret">
+            </div>
+            <div class="form-group">
+                <label>License Key</label>
+                <input type="text" id="store-license" placeholder="乐天License Key">
+            </div>
+            <button class="btn btn-primary" onclick="addStore()">保存</button>
+        </div>
+    </div>
+    
+    <!-- 添加SKU弹窗 -->
+    <div class="modal" id="sku-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加SKU</h3>
+                <button class="modal-close" onclick="closeModal('sku-modal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>SKU编号</label>
+                <input type="text" id="sku-id" placeholder="如: YF-1063">
+            </div>
+            <div class="form-group">
+                <label>商品名称</label>
+                <input type="text" id="sku-name" placeholder="商品名称">
+            </div>
+            <div class="form-group">
+                <label>允许超卖</label>
+                <select id="sku-oversell">
+                    <option value="false">不允许</option>
+                    <option value="true">允许</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>环境</label>
+                <select id="sku-env">
+                    <option value="prod">生产环境</option>
+                    <option value="test">测试环境</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="addSku()">保存</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        
+        // 导航
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+                document.getElementById('page-' + btn.dataset.page).style.display = 'block';
+                loadPageData(btn.dataset.page);
+            });
+        });
+        
+        async function loadPageData(page) {
+            switch(page) {
+                case 'dashboard': loadDashboard(); break;
+                case 'stores': loadStores(); break;
+                case 'skus': loadSkus(); break;
+                case 'inventory': break;
+                case 'import': loadStoresForImport(); break;
+                case 'audit': loadAuditLogs(); break;
+            }
+        }
+        
+        // 控制台
+        async function loadDashboard() {
+            try {
+                const [storesRes, skusRes, eventsRes, oversellRes] = await Promise.all([
+                    fetch(`${API_BASE}/stores`),
+                    fetch(`${API_BASE}/skus`),
+                    fetch(`${API_BASE}/events/ce1111?limit=10`),
+                    fetch(`${API_BASE}/audit/oversell`)
+                ]);
+                
+                const stores = await storesRes.json();
+                const skus = await skusRes.json();
+                const oversell = await oversellRes.json();
+                
+                document.getElementById('stat-stores').textContent = stores.length;
+                document.getElementById('stat-skus').textContent = skus.length;
+                document.getElementById('stat-oversell').textContent = oversell.length;
+                document.getElementById('stat-events').textContent = '-';
+                
+                // 加载最近事件
+                const events = await eventsRes.json();
+                renderRecentEvents(events);
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        
+        function renderRecentEvents(events) {
+            if (!events || events.length === 0) {
+                document.getElementById('recent-events').innerHTML = '<div class="empty">暂无事件</div>';
+                return;
+            }
+            const html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>事件类型</th>
+                            <th>SKU</th>
+                            <th>数量变化</th>
+                            <th>操作人</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${events.map(e => `
+                            <tr>
+                                <td>${new Date(e.created_at).toLocaleString('zh-CN')}</td>
+                                <td><span class="badge badge-info">${e.event_type}</span></td>
+                                <td>${e.sku_id}</td>
+                                <td class="${e.quantity >= 0 ? 'text-success' : 'text-danger'}">${e.quantity > 0 ? '+' : ''}${e.quantity}</td>
+                                <td>${e.operator}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('recent-events').innerHTML = html;
+        }
+        
+        // 店铺管理
+        async function loadStores() {
+            try {
+                const res = await fetch(`${API_BASE}/stores`);
+                const stores = await res.json();
+                
+                if (stores.length === 0) {
+                    document.getElementById('stores-list').innerHTML = '<div class="empty">暂无店铺</div>';
+                    return;
+                }
+                
+                const html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>店铺ID</th>
+                                <th>店铺名称</th>
+                                <th>平台</th>
+                                <th>状态</th>
+                                <th>最后同步</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${stores.map(s => `
+                                <tr>
+                                    <td>${s.store_id}</td>
+                                    <td>${s.store_name}</td>
+                                    <td>${s.platform_type}</td>
+                                    <td><span class="badge badge-success">${s.status}</span></td>
+                                    <td>${s.last_sku_sync_at ? new Date(s.last_sku_sync_at).toLocaleString('zh-CN') : '从未同步'}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="syncStoreSkus('${s.store_id}')">同步SKU</button>
+                                        <button class="btn btn-warning btn-sm" onclick="testRakutenApi('${s.store_id}')">测试API</button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteStore('${s.store_id}')">删除</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                document.getElementById('stores-list').innerHTML = html;
+            } catch(e) {
+                document.getElementById('stores-list').innerHTML = '<div class="error">加载失败</div>';
+            }
+        }
+        
+        async function syncStoreSkus(storeId) {
+            if (!confirm('确定要同步该店铺的SKU吗？')) return;
+            
+            try {
+                const res = await fetch(`${API_BASE}/stores/${storeId}/sync-skus`, { method: 'POST' });
+                const data = await res.json();
+                alert('同步完成！共同步 ' + (data.synced || 0) + ' 个SKU');
+                loadStores();
+            } catch(e) {
+                alert('同步失败: ' + e.message);
+            }
+        }
+        
+        async function testRakutenApi(storeId) {
+            try {
+                const res = await fetch(`${API_BASE}/rakuten/debug/${storeId}`);
+                const data = await res.json();
+                
+                console.log('API Response:', data);
+                
+                if (data.error) {
+                    alert('错误: ' + data.error + '\n\n店铺ID: ' + data.store_id);
+                } else if (data.status === 'error') {
+                    alert('API测试失败: ' + data.error + '\n\n详细信息：' + data.traceback);
+                } else {
+                    alert('API测试成功！\n\n返回数据：\n' + JSON.stringify(data.response, null, 2));
+                }
+            } catch(e) {
+                alert('测试失败: ' + e.message);
+            }
+        }
+        
+        async function deleteStore(storeId) {
+            if (!confirm('确定要删除该店铺吗？')) return;
+            
+            try {
+                const res = await fetch(`${API_BASE}/stores/${storeId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    alert('删除成功');
+                    loadStores();
+                } else {
+                    alert('删除失败');
+                }
+            } catch(e) {
+                alert('删除失败: ' + e.message);
+            }
+        }
+        
+        function showAddStoreModal() {
+            document.getElementById('store-modal').classList.add('show');
+        }
+        
+        async function addStore() {
+            const storeId = document.getElementById('store-id').value.trim();
+            const storeName = document.getElementById('store-name').value.trim();
+            const platform = document.getElementById('store-platform').value;
+            const secret = document.getElementById('store-secret').value.trim();
+            const license = document.getElementById('store-license').value.trim();
+            
+            if (!storeId || !storeName) {
+                alert('请填写店铺ID和名称');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/stores`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        store_id: storeId,
+                        store_name: storeName,
+                        platform_type: platform,
+                        api_config: { serviceSecret: secret, licenseKey: license }
+                    })
+                });
+                
+                if (res.ok) {
+                    alert('添加成功');
+                    closeModal('store-modal');
+                    loadStores();
+                } else {
+                    const data = await res.json();
+                    alert('添加失败: ' + (data.detail || '未知错误'));
+                }
+            } catch(e) {
+                alert('添加失败: ' + e.message);
+            }
+        }
+        
+        // SKU管理
+        async function loadSkus() {
+            const search = document.getElementById('sku-search').value;
+            const env = document.getElementById('sku-environment').value;
+            
+            let url = `${API_BASE}/skus?`;
+            if (env) url += `environment=${env}&`;
+            
+            try {
+                const res = await fetch(url);
+                let skus = await res.json();
+                
+                if (search) {
+                    skus = skus.filter(s => s.sku_id.includes(search.toLowerCase()));
+                }
+                
+                if (skus.length === 0) {
+                    document.getElementById('skus-list').innerHTML = '<div class="empty">暂无SKU</div>';
+                    return;
+                }
+                
+                const html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>原始SKU</th>
+                                <th>商品名称</th>
+                                <th>环境</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${skus.map(s => `
+                                <tr>
+                                    <td>${s.sku_id}</td>
+                                    <td>${s.original_sku || '-'}</td>
+                                    <td>${s.sku_name}</td>
+                                    <td><span class="badge ${s.environment === 'test' ? 'badge-warning' : 'badge-info'}">${s.environment}</span></td>
+                                    <td><span class="badge ${s.status === 'active' ? 'badge-success' : 'badge-danger'}">${s.status}</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="viewInventory('${s.sku_id}')">查看库存</button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteSku('${s.sku_id}')">删除</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                document.getElementById('skus-list').innerHTML = html;
+            } catch(e) {
+                document.getElementById('skus-list').innerHTML = '<div class="error">加载失败</div>';
+            }
+        }
+        
+        async function viewInventory(skuId) {
+            document.getElementById('inventory-search').value = skuId;
+            searchInventory();
+            
+            document.querySelector('[data-page="inventory"]').click();
+        }
+        
+        async function deleteSku(skuId) {
+            if (!confirm('确定要删除该SKU吗？删除后将成为"未登录"状态（清空所有库存数据）。')) return;
+            
+            try {
+                const res = await fetch(`${API_BASE}/skus/${skuId}`, { method: 'DELETE' });
+                const data = await res.json();
+                alert(data.message || '删除成功');
+                loadSkus();
+            } catch(e) {
+                alert('删除失败: ' + e.message);
+            }
+        }
+        
+        function showAddSkuModal() {
+            document.getElementById('sku-modal').classList.add('show');
+        }
+        
+        async function addSku() {
+            const skuId = document.getElementById('sku-id').value.trim().toLowerCase();
+            const skuName = document.getElementById('sku-name').value.trim();
+            const allowOversell = document.getElementById('sku-oversell').value === 'true';
+            const env = document.getElementById('sku-env').value;
+            
+            if (!skuId || !skuName) {
+                alert('请填写SKU编号和名称');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/skus`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        sku_id: skuId,
+                        sku_name: skuName,
+                        allow_oversell: allowOversell,
+                        environment: env
+                    })
+                });
+                
+                if (res.ok) {
+                    alert('添加成功');
+                    closeModal('sku-modal');
+                    loadSkus();
+                } else {
+                    const data = await res.json();
+                    alert('添加失败: ' + (data.detail || '未知错误'));
+                }
+            } catch(e) {
+                alert('添加失败: ' + e.message);
+            }
+        }
+        
+        // 库存搜索
+        async function searchInventory() {
+            const skuId = document.getElementById('inventory-search').value.trim().toLowerCase();
+            if (!skuId) {
+                document.getElementById('inventory-detail').innerHTML = '<div class="empty">请输入SKU搜索</div>';
+                return;
+            }
+
+            try {
+                // 并行获取库存和SKU详情
+                const [invRes, skuRes] = await Promise.all([
+                    fetch(`${API_BASE}/inventory/${skuId}`),
+                    fetch(`${API_BASE}/skus/${skuId}`)
+                ]);
+
+                if (!invRes.ok) {
+                    document.getElementById('inventory-detail').innerHTML = '<div class="error">未找到该SKU的库存数据</div>';
+                    return;
+                }
+
+                const inv = await invRes.json();
+                const sku = skuRes.ok ? await skuRes.json() : null;
+
+                const eventsRes = await fetch(`${API_BASE}/events/${skuId}?limit=20`);
+                const events = await eventsRes.json();
+
+                // 获取图片URL
+                const imageUrl = sku?.extra_data?.image_url;
+
+                const html = `
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; gap: 20px; align-items: flex-start;">
+                            ${imageUrl ? `
+                                <div>
+                                    <img src="${imageUrl}" alt="Product Image" style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" onerror="this.style.display='none'">
+                                </div>
+                            ` : ''}
+                            <div style="flex: 1;">
+                                <h3 style="margin-bottom: 10px;">📦 ${inv.sku_id}</h3>
+                                ${sku?.sku_name ? `<p style="color: #666; margin-bottom: 8px;">${sku.sku_name}</p>` : ''}
+                                <p>当前库存: <span class="${inv.internal_available < 0 ? 'text-danger' : 'text-success'}" style="font-size: 24px; font-weight: bold;">${inv.internal_available}</span></p>
+                                <p>注册店铺: ${inv.registered_stores ? inv.registered_stores.join(', ') : '无'}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 style="margin-bottom: 10px;">库存变更历史</h4>
+                    ${events.length > 0 ? `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>事件</th>
+                                    <th>数量变化</th>
+                                    <th>原因</th>
+                                    <th>操作人</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${events.map(e => `
+                                    <tr>
+                                        <td>${new Date(e.created_at).toLocaleString('zh-CN')}</td>
+                                        <td>${e.event_type}</td>
+                                        <td class="${e.quantity >= 0 ? 'text-success' : 'text-danger'}">${e.quantity > 0 ? '+' : ''}${e.quantity}</td>
+                                        <td>${e.reason || '-'}</td>
+                                        <td>${e.operator}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    ` : '<div class="empty">暂无变更记录</div>'}
+                `;
+                document.getElementById('inventory-detail').innerHTML = html;
+            } catch(e) {
+                document.getElementById('inventory-detail').innerHTML = '<div class="error">查询失败: ' + e.message + '</div>';
+            }
+        }
+        
+        // CSV导入
+        async function loadStoresForImport() {
+            try {
+                const res = await fetch(`${API_BASE}/stores`);
+                const stores = await res.json();
+                
+                let html = '<option value="">不关联店铺</option>';
+                stores.forEach(s => {
+                    html += `<option value="${s.store_id}">${s.store_name}</option>`;
+                });
+                document.getElementById('import-store').innerHTML = html;
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        
+        document.getElementById('import-mode').addEventListener('change', function() {
+            document.getElementById('zero-handling-group').style.display = 
+                this.value === 'reset_stock' ? 'block' : 'none';
+        });
+        
+        async function previewImport() {
+            const fileInput = document.getElementById('import-file');
+            if (!fileInput.files[0]) {
+                alert('请选择文件');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('store_id', document.getElementById('import-store').value);
+            formData.append('import_mode', document.getElementById('import-mode').value);
+            formData.append('inventory_mode', document.getElementById('inventory-mode').value);
+            formData.append('zero_handling', document.getElementById('import-zero-handling').value);
+            formData.append('skip_no_sku', document.getElementById('import-skip-no-sku').checked ? 'true' : 'false');
+
+            try {
+                const res = await fetch(`${API_BASE}/import/preview`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // 构建预览表格
+                let tableHtml = '';
+                if (data.preview_rows && data.preview_rows.length > 0) {
+                    const headers = Object.keys(data.preview_rows[0]);
+                    const hasImage = headers.includes('image_url');
+
+                    tableHtml = `
+                        <div style="margin-top: 20px;">
+                            <h4 style="margin-bottom: 10px;">预览数据（前${data.preview_rows.length}行）</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        ${hasImage ? '<th>图片</th>' : ''}
+                                        ${headers.map(h => `<th>${h}</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.preview_rows.map(row => `
+                                        <tr>
+                                            ${hasImage ? `
+                                                <td>
+                                                    ${row.image_url ? `<img src="${row.image_url}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">` : '-'}
+                                                </td>
+                                            ` : ''}
+                                            ${headers.map(h => `<td>${row[h] || ''}</td>`).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+
+                document.getElementById('import-result').innerHTML = `
+                    <div class="success" style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 10px;">预览结果</h3>
+                        <p>总行数: ${data.total_rows}</p>
+                        <p>新增SKU: ${data.new_skus}</p>
+                        <p>已注册SKU: ${data.registered_skus}</p>
+                        <p>将重置库存: ${data.reset_skus}</p>
+                        <p>负数归零处理: ${data.zero_negative_skus}</p>
+                        ${data.skipped_no_sku !== undefined ? `<p>跳过无SKU行: ${data.skipped_no_sku}</p>` : ''}
+                    </div>
+                    ${tableHtml}
+                `;
+            } catch(e) {
+                alert('预览失败: ' + e.message);
+            }
+        }
+
+        async function confirmImport() {
+            const fileInput = document.getElementById('import-file');
+            if (!fileInput.files[0]) {
+                alert('请选择文件');
+                return;
+            }
+
+            if (!confirm('确定要导入吗？')) return;
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('store_id', document.getElementById('import-store').value);
+            formData.append('import_mode', document.getElementById('import-mode').value);
+            formData.append('inventory_mode', document.getElementById('inventory-mode').value);
+            formData.append('zero_handling', document.getElementById('import-zero-handling').value);
+            formData.append('skip_no_sku', document.getElementById('import-skip-no-sku').checked ? 'true' : 'false');
+            formData.append('operator', 'admin');
+
+            try {
+                const res = await fetch(`${API_BASE}/import/confirm`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // 显示导入结果表格
+                let resultHtml = `
+                    <div class="success" style="margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 10px;">导入成功！</h3>
+                        <p>新增: ${data.imported}</p>
+                        <p>更新: ${data.updated}</p>
+                        <p>跳过: ${data.skipped}</p>
+                        ${data.skipped_no_sku !== undefined ? `<p>跳过无SKU行: ${data.skipped_no_sku}</p>` : ''}
+                        <p>错误: ${data.errors ? data.errors.length : 0}</p>
+                        <p>总计: ${data.total}</p>
+                    </div>
+                `;
+
+                // 显示错误表格（如果有）
+                if (data.errors && data.errors.length > 0) {
+                    resultHtml += `
+                        <div style="margin-top: 20px;">
+                            <h4 style="margin-bottom: 10px; color: #dc3545;">导入错误 (${data.errors.length})</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>行号</th>
+                                        <th>SKU</th>
+                                        <th>错误信息</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.errors.map(e => `
+                                        <tr>
+                                            <td>${e.row}</td>
+                                            <td>${e.sku_id || '-'}</td>
+                                            <td>${e.error}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+
+                document.getElementById('import-result').innerHTML = resultHtml;
+                // 刷新SKU列表
+                loadSkus();
+            } catch(e) {
+                alert('导入失败: ' + e.message);
+            }
+        }
+
+        // 重置测试数据
+        async function resetTestData() {
+            if (!confirm('确定要重置所有测试数据吗？\n\n这将删除：\n- 所有库存事件\n- 所有库存快照\n- 所有店铺SKU关联\n- 所有上传文件\n\n保留：\n- 店铺信息\n- SKU主数据（sku_master）\n\n此操作不可恢复！')) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/test/reset`, { method: 'POST' });
+                const data = await res.json();
+
+                if (data.status === 'reset completed') {
+                    document.getElementById('reset-result').innerHTML = `
+                        <div class="success">
+                            <p>✅ 测试数据已重置！</p>
+                            <p>测试SKU: ${data.test_sku}</p>
+                        </div>
+                    `;
+                    // 刷新各个页面数据
+                    loadDashboard();
+                    if (document.getElementById('page-skus').style.display !== 'none') {
+                        loadSkus();
+                    }
+                } else {
+                    alert('重置失败: ' + JSON.stringify(data));
+                }
+            } catch(e) {
+                alert('重置失败: ' + e.message);
+            }
+        }
+
+        // 审计日志
+        async function loadAuditLogs() {
+            try {
+                const res = await fetch(`${API_BASE}/audit/logs?limit=50`);
+                const logs = await res.json();
+                
+                if (logs.length === 0) {
+                    document.getElementById('audit-log').innerHTML = '<div class="empty">暂无日志</div>';
+                    return;
+                }
+                
+                const html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>时间</th>
+                                <th>用户</th>
+                                <th>操作</th>
+                                <th>详情</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${logs.map(l => `
+                                <tr>
+                                    <td>${new Date(l.created_at).toLocaleString('zh-CN')}</td>
+                                    <td>${l.user}</td>
+                                    <td>${l.action}</td>
+                                    <td>${JSON.stringify(l.details)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                document.getElementById('audit-log').innerHTML = html;
+            } catch(e) {
+                document.getElementById('audit-log').innerHTML = '<div class="error">加载失败</div>';
+            }
+        }
+
+        // 切换库存模式组的显示
+        function toggleInventoryModeGroup() {
+            const mode = document.getElementById('import-mode').value;
+            const inventoryModeGroup = document.getElementById('inventory-mode-group');
+            const zeroHandlingGroup = document.getElementById('zero-handling-group');
+
+            if (mode === 'reset_stock') {
+                inventoryModeGroup.style.display = 'block';
+                zeroHandlingGroup.style.display = 'none';
+            } else {
+                inventoryModeGroup.style.display = 'none';
+                zeroHandlingGroup.style.display = 'block';
+            }
+        }
+
+        // 通用
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        
+        // 初始化
+        loadDashboard();
+    </script>
+</body>
+</html>

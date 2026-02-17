@@ -1,0 +1,111 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "@tarquinen/opencode-dcp@latest",
+    "opencode-openai-codex-auth"
+  ],
+  "provider": {
+    "google-gemini": {
+      "npm": "@ai-sdk/google",
+      "name": "Google Gemini",
+      "options": {
+        "apiKey": "{env:GEMINI_API_KEY}"
+      },
+      "models": {
+        "gemini-2.5-pro": {
+          "name": "Gemini 2.5 Pro (Paid)",
+          "options": {
+            "thinkingConfig": {
+              "thinkingBudget": 8192
+            }
+          }
+        }
+      }
+    },
+    "openai": {
+      "npm": "@ai-sdk/openai",
+      "name": "OpenAI Codex",
+      "options": {
+        "reasoningEffort": "medium",
+        "reasoningSummary": "auto",
+        "textVerbosity": "medium",
+        "store": false
+      },
+      "models": {
+        "gpt-5.1-codex-high": {
+          "name": "GPT 5.1 Codex High (OAuth)"
+        },
+        "gpt-5.1-codex-medium": {
+          "name": "GPT 5.1 Codex Medium (OAuth)"
+        },
+        "gpt-5.1-codex-low": {
+          "name": "GPT 5.1 Codex Low (OAuth)"
+        },
+        "gpt-4o": {
+          "name": "GPT-4o"
+        }
+      }
+    },
+    "deepseek": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DeepSeek",
+      "options": {
+        "baseURL": "https://api.deepseek.com/v1",
+        "apiKey": "{env:DEEPSEEK_API_KEY}"
+      },
+      "models": {
+        "deepseek-chat": {
+          "name": "DeepSeek Chat"
+        }
+      }
+    },
+    "zhipu": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "智谱 GLM",
+      "options": {
+        "baseURL": "https://open.bigmodel.cn/api/paas/v4",
+        "apiKey": "{env:ZHIPU_API_KEY}"
+      },
+      "models": {
+        "glm-4": {
+          "name": "GLM-4"
+        },
+        "glm-4-flash": {
+          "name": "GLM-4-Flash"
+        },
+        "glm-4.7": {
+          "name": "GLM-4.7"
+        }
+      }
+    },
+    "minimax": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Minimax",
+      "options": {
+        "baseURL": "https://api.minimax.chat/v1",
+        "apiKey": "{env:MINIMAX_API_KEY}"
+      },
+      "models": {
+        "MiniMax-M2.5": {
+          "name": "MiniMax M2.5 (Free)"
+        },
+        "MiniMax-M2.5-highspeed": {
+          "name": "MiniMax M2.5 HighSpeed"
+        }
+      }
+    },
+    "zen": {
+      "npm": "@opencode-ai/zen",
+      "name": "OpenCode Zen",
+      "options": {
+        "apiKey": "{env:ZEN_API_KEY}"
+      },
+      "models": {
+        "minimax/m2.5-free": {
+          "name": "MiniMax M2.5 Free (Zen)"
+        }
+      }
+    }
+  },
+  "model": "zhipu/glm-4.7"
+}

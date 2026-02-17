@@ -1,0 +1,137 @@
+export GEMINI_API_KEY="AIzaSyAIxE9U_gcOnQs4C6GV2W6P0SguWYZe1zg"
+export DEEPSEEK_API_KEY="sk-eb84dd3e2b4d4a678af637310818c135"
+
+
+# API Keys (请将后面的值替换为你自己的 API Key)
+ZHIPU_API_KEY=44f88180ace341419921874a4afaccaf.lBCqxECf5LQnFH5d
+MINIMAX_API_KEY=sk-api-JSMtCfoRWtBPOr7vR7nQusO17qTiNf-4PLQnsxJsqElc0chABdSM2adk5gZfu0zQuxNkeCPbtvi1Nyr5e$
+2022627786899858407
+sk-api-lmX09IBZ4j9AzCf0crtT-GS0XTqSIOsiStATNAvISq7s765W6M11MDS1HYKiirJgorzOABOdMyfdwnRjFgJXXLp6oqmoaQdzVkIwkidqKgVeKQXR6ujQRGE
+GEMINI_API_KEY=AIzaSyAIxE9U_gcOnQs4C6GV2W6P0SguWYZe1zg
+DEEPSEEK_API_KEY=sk-eb84dd3e2b4d4a678af637310818c135
+ZEN_API_KEY=sk-9zxwXMcg6EZInYmPrnLa2iLzvnVvxLJw0lorqGym8f4V7i5bf67ynRLVLVKPWgOg
+
+Kimi-sk-FyXMbeT9IYbNBayWitoIRu0TVJH4aN3FGzveZrVYstmohDrm
+
+
+sk-cp-JNex8vWCuISzFAgQV5LkHLMwF3QyCZ0-C1-g__WPwY4j3y5WZ60zsPdhx0McMMxARurQWnRcDhxNI0mFUUhuI6XBJKsx5cxfet94stwRyH3WYAq7iK1Dp6M
+
+opencode web --model deepseek
+
+# 网页界面指定模型
+opencode web --model zhipuai
+
+opencode web --model gemini
+
+
+cckit configure zhipu \
+  --api-key "44f88180ace341419921874a4afaccaf.lBCqxECf5LQnFH5d" \
+  --base-url "https://open.bigmodel.cn/api/anthropic" \
+  --model "glm-4.7"
+
+unset ANTHROPIC_AUTH_TOKEN ANTHROPIC_API_KEY ANTHROPIC_BASE_URL
+unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_SONNET_MODEL ANTHROPIC_DEFAULT_OPUS_MODEL
+
+unset ANTHROPIC_AUTH_TOKEN
+unset ANTHROPIC_API_KEY
+unset ANTHROPIC_BASE_URL
+unset ANTHROPIC_DEFAULT_HAIKU_MODEL
+unset ANTHROPIC_DEFAULT_SONNET_MODEL
+unset ANTHROPIC_DEFAULT_OPUS_MODEL
+
+
+cckit configure zhipu \
+  --api-key "44f88180ace341419921874a4afaccaf.lBCqxECf5LQnFH5d" \
+  --base-url "https://open.bigmodel.cn/api/anthropic" \
+  --model "glm-4.7"
+
+
+切换到智谱
+
+bash
+cckit switch zhipu
+启动并最终验证
+
+bash
+claude
+进入后，立刻输入 /status，这次你应该会看到：
+
+Anthropic base URL: https://open.bigmodel.cn/api/anthropic
+
+Model: glm-4.7
+
+✅ 现在，你的智谱 GLM-4.7 就成功恢复了
+它的 5 小时额度早已在凌晨 6 点重置，现在可以正常使用。以后想切换回 Kimi，只需 cckit switch kimi 并重新运行 claude 即可。
+
+
+
+
+
+
+进入后立即输入 /status，确认：
+
+Anthropic base URL 应为 https://open.bigmodel.cn/api/anthropic
+
+Model 应为 glm-4.7
+
+
+
+ Gemini 配额问题
+
+  你的 Gemini API Key 免费层配额已用完。解决方案：
+
+  1. 等待重置 - 免费层通常每天重置
+  2. 升级付费 - 到 https://ai.google.dev/billing 升级
+  3. 使用其他模型 - MiniMax、DeepSeek 等目前可用
+
+  需要我帮你做其他事情吗？
+
+✻ Baked for 1m 15s
+
+❯ 我自己打开的流程是什么,比如我要使用deepsddk的话,让你调用                                                                                                             
+                                                           
+⏺ 使用 DeepSeek 的流程                                                                                                                                                 
+                                                                                                                                                           
+  步骤 1：打开终端                                                                                                                                                     
+                  
+  在 macOS 上按 Command + 空格，输入 "终端"，按回车打开                                                                                                                
+                  
+  步骤 2：进入脚本目录
+
+  cd /Users/kuku
+
+  步骤 3：运行脚本
+
+  export DEEPSEEK_API_KEY="sk-eb84dd3e2b4d4a678af637310818c135"
+  python3 deepseek_chat.py
+
+  然后就可以开始对话了！
+
+  ---
+  快捷方式 - 直接运行
+
+  你也可以一次性运行：
+
+  cd /Users/kuku && export DEEPSEEK_API_KEY="sk-eb84dd3e2b4d4a678af637310818c135" && python3 deepseek_chat.py
+
+  ---
+  其他模型
+
+  # MiniMax
+  cd /Users/kuku && export
+  MINIMAX_API_KEY="sk-api-lmX09IBZ4j9AzCf0crtT-GS0XTqSIOsiStATNAvISq7s765W6M11MDS1HYKiirJgorzOABOdMyfdwnRjFgJXXLp6oqmoaQdzVkIwkidqKgVeKQXR6ujQRGE" && export
+  MINIMAX_GROUP_ID="2022627786899858407" && python3 minimax_chat.py
+
+  # GLM
+  cd /Users/kuku && export GLM_API_KEY="44f88180ace341419921874a4afaccaf.lBCqxECf5LQnFH5d" && python3 glm_chat.py
+
+  # Kimi
+  cd /Users/kuku && export KIMI_API_KEY="sk-FyXMbeT9IYbNBayWitoIRu0TVJH4aN3FGzveZrVYstmohDrm" && python3 kimi_chat.py
+
+  ---
+  脚本命令
+
+  输入后可用命令：
+  - quit / exit / q - 退出
+  - clear - 清空对话历史
+

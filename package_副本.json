@@ -1,0 +1,9 @@
+{
+  "name": "inventory-system",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@tarquinen/opencode-dcp": "^2.1.3",
+    "opencode-openai-codex-auth": "^4.4.0"
+  }
+}
